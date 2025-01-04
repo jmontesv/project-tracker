@@ -1,19 +1,20 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
-# Crear la instancia de la aplicación Flask
-app = Flask(__name__)
+# Inicializa la base de datos
+db = SQLAlchemy()
 
-# Cargar las configuraciones desde el archivo config.py
-app.config.from_pyfile('../config.py')
+def create_app():
+    app = Flask(__name__)
 
-# Inicializar la extensión SQLAlchemy
-db = SQLAlchemy(app)
+    # Cargar configuraciones desde el archivo config.py
+    app.config.from_pyfile('../config.py')
 
-@app.route('/')
-def home():
-    return "¡Bienvenido a ProjectTracker!"
+    # Inicializar SQLAlchemy con la aplicación
+    db.init_app(app)
 
-# Iniciar el servidor
-if __name__ == '__main__':
-    app.run(debug=True)
+    # Importar y registrar las rutas
+    from .routes import main
+    app.register_blueprint(main)
+
+    return app
