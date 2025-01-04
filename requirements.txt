@@ -1,0 +1,11 @@
+Tecnologías Utilizadas:
+Backend:
+
+Flask como framework principal para el backend.
+Flask-SocketIO para manejar la actualización en tiempo real con WebSockets.
+SQLAlchemy y SQLite/PostgreSQL para gestionar las bases de datos de proyectos, tareas, usuarios y comentarios.
+Frontend:
+
+HTML/CSS para la estructura y el diseño.
+JavaScript (AJAX/WebSockets) para la comunicación en tiempo real y la interactividad del frontend.
+Bootstrap o TailwindCSS para una interfaz responsiva y moderna.
