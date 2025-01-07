@@ -1,6 +1,6 @@
 # app/routes.py
 from flask import Blueprint, request, jsonify
-from app.models import db, projects
+from app.models import db, projects, Task
 
 # Crear un Blueprint llamado "main"
 main = Blueprint('main', __name__)
@@ -35,4 +35,19 @@ def proyectos():
         projects_list = [project.to_dict() for project in proyectos]
         
         return jsonify(projects_list), 200
-       
+@main.route('/tareas/proyecto/<int:project_id>', methods=['GET'])
+def tareasDeUnProyecto(project_id):
+    try:
+        # Consultar todas las tareas asociadas al proyecto
+        tareas = Task.query.filter_by(project_id=project_id).all()
+        
+        # Validar si hay tareas asociadas
+        if not tareas:
+            return jsonify({"message": f"No tasks found for project with id {project_id}"}), 404
+        
+        # Serializar las tareas a formato JSON
+        lista_tareas = [tarea.to_dict() for tarea in tareas]
+        return jsonify(lista_tareas), 200
+    
+    except Exception as e:
+        return jsonify({"error": f"Ha ocurrido un error: {str(e)}"}), 500

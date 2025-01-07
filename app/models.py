@@ -1,5 +1,5 @@
 from app import db
-
+from datetime import datetime
 class projects(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False)
@@ -8,17 +8,51 @@ class projects(db.Model):
     created_at = db.Column(db.Date, nullable=False)
     updated_at = db.Column(db.Date, nullable=False)
 
-   # tareas = db.relationship('Tarea', backref='projects', lazy=True)  # Relación 1:N con Tarea
-
     def __repr__(self):
-        return f'<P
-        royecto {self.name}>'
+        return f'<Proyecto {self.name}>'
     def to_dict(self):
         return {
             "id": self.id,
             "name": self.name,
             "description": self.description,
             "created_by": self.created_by,
+            "created_at": self.created_at.strftime('%Y-%m-%d %H:%M:%S') if self.created_at else None,
+            "updated_at": self.updated_at.strftime('%Y-%m-%d %H:%M:%S') if self.updated_at else None,
+        }
+    
+class Task(db.Model):
+    __tablename__ = 'tasks'
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    title = db.Column(db.Text, nullable=False)  # Título de la tarea
+    description = db.Column(db.Text)  # Descripción detallada de la tarea
+    status = db.Column(
+        db.Enum('pending', 'in progress', 'completed', name='task_status'),
+        default='pending',
+        nullable=False
+    )  # Estado de la tarea
+    priority = db.Column(
+        db.Enum('low', 'medium', 'high', name='task_priority'),
+        default='medium',
+        nullable=False
+    )  # Prioridad de la tarea
+    due_date = db.Column(db.DateTime)  # Fecha de vencimiento
+    assigned_to = db.Column(db.Integer, nullable=True)  # ID del usuario asignado
+    project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)  # Relación con Proyecto
+    created_at = db.Column(db.DateTime)  # Fecha de creación
+    updated_at = db.Column(db.DateTime)  # Fecha de actualización
+
+    def to_dict(self):
+        """Convierte la tarea en un diccionario para respuesta JSON"""
+        return {
+            "id": self.id,
+            "title": self.title,
+            "description": self.description,
+            "status": self.status,
+            "priority": self.priority,
+            "due_date": self.due_date.strftime('%Y-%m-%d %H:%M:%S') if self.due_date else None,
+            "assigned_to": self.assigned_to,
+            "project_id": self.project_id,
             "created_at": self.created_at.strftime('%Y-%m-%d %H:%M:%S') if self.created_at else None,
             "updated_at": self.updated_at.strftime('%Y-%m-%d %H:%M:%S') if self.updated_at else None,
         }

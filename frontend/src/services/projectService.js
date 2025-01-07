@@ -1,0 +1,31 @@
+import api from './api';
+
+// Obtener todos los proyectos
+export const getProjects = async () => {
+  try {
+    const response = await api.get('/proyectos');
+    return response.data;
+  } catch (error) {
+    throw new Error('Error al obtener los proyectos', error);
+  }
+}
+
+// Crear un nuevo proyecto
+export const createProject = async (projectData) => {
+  try {
+    const response = await api.post('/proyectos', projectData);
+    return response.data;
+  } catch (error) {
+    throw new Error('Error al crear el proyecto', error);
+  }
+};
+
+export const getProjectTasks = async (projectId) => {
+  try {
+    const response = await api.get(`tareas/proyecto/${projectId}`);
+    return response.data; // Asume que las tareas vienen en `response.data`
+  } catch (error) {
+    console.error(`Error al obtener las tareas del proyecto con ID ${projectId}:`, error.message);
+    throw new Error('No se pudieron obtener las tareas del proyecto');
+  }
+};
