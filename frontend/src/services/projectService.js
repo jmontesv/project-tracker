@@ -20,6 +20,18 @@ export const createProject = async (projectData) => {
   }
 };
 
+// Obtener un proyecto específico
+export const getProject = async (projectId) => {
+  try {
+    const response = await api.get(`/proyectos/${projectId}`);
+    return response.data; // Asume que las tareas vienen en `response.data`
+  } catch (error) {
+    console.error(`Error al obtener el proyecto con ID ${projectId}:`, error.message);
+    throw new Error('No se pudo obtener el proyecto');
+  }
+};
+
+// Obtener tareas de proyecto
 export const getProjectTasks = async (projectId) => {
   try {
     const response = await api.get(`tareas/proyecto/${projectId}`);
