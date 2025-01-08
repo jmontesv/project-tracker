@@ -35,6 +35,22 @@ def proyectos():
         projects_list = [project.to_dict() for project in proyectos]
         
         return jsonify(projects_list), 200
+    
+@main.route('/proyectos/<int:project_id>', methods=['GET'])
+def proyecto(project_id):
+    try:
+        # Buscar el proyecto por ID
+        project = projects.query.get(project_id)
+        
+        if not project:
+            return jsonify({"message": f"Project with ID {project_id} not found"}), 404
+        
+        # Serializar el proyecto a formato JSON
+        return jsonify(project.to_dict()), 200
+    
+    except Exception as e:
+        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+
 @main.route('/tareas/proyecto/<int:project_id>', methods=['GET'])
 def tareasDeUnProyecto(project_id):
     try:

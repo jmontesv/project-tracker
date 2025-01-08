@@ -10,10 +10,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@formkit/drag-and-drop": "^0.3.1",
+    "@hello-pangea/dnd": "^17.0.0",
     "@radix-ui/themes": "^3.1.6",
     "axios": "^1.7.9",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-kanban": "^0.0.0-test",
     "react-router-dom": "^7.1.1"
   },
   "devDependencies": {
