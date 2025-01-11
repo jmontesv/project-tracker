@@ -67,3 +67,25 @@ def tareasDeUnProyecto(project_id):
     
     except Exception as e:
         return jsonify({"error": f"Ha ocurrido un error: {str(e)}"}), 500
+    
+# Otra ruta de ejemplo
+@main.route('/tareas', methods=['POST'])
+def tareas():
+    # Obtener los datos enviados en el cuerpo de la solicitud
+    data = request.get_json()  # Si envías JSON
+    if data:
+        nueva_tarea = Task(
+            title=data['titulo'],
+            description=data['descripcion'],
+            status=data['status'],
+            priority=data['prioridad'],
+            due_date=data['fecha_fin'],
+            assigned_to=data['asignado_a'],
+            project_id=data['id_proyecto'],
+            created_at=data['se_creo'],
+            updated_at=data['se_actualizo']
+        )
+        
+        db.session.add(nueva_tarea)
+        db.session.commit()
+    return jsonify({"message": f"La tarea {data['titulo']} agregada con éxito!"}), 201 

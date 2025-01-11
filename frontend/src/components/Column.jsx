@@ -1,26 +1,35 @@
 import { useState } from 'react'
-import { TextField, Button } from '@radix-ui/themes';
+import { TextField, Button, AlertDialog, Flex, TextArea, Box, Select} from '@radix-ui/themes';
 import { Task } from './Task';
+import { useParams } from 'react-router-dom';
 
 export const Column = ({ column, tasks, onDragStart, onDrop }) => {
-  const [formData, setFormData] = useState({
-    pending: '',
-    'in progress': '',
-    completed: ''
+  const { projectId } = useParams()
+  const [newTask, setNewTask] = useState({
+    titulo: "",
+    descripcion: "",
+    status: "",
+    prioridad: "low",
+    fecha_fin: "",
+    asignado_a: 1,
+    id_proyecto: projectId, 
+    se_creo: new Date().toISOString(),
+    se_actualizo: new Date().toISOString()
   });
+
+  const defaultValuesStatus = {
+    "Pendiente": "pending",
+    "En Progreso": "in progress",
+    "Completado": "completed"
+  }
 
   // Manejar cambios en los inputs
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setNewTask({
+      ...newTask,
       [name]: value // Actualiza el campo correspondiente
     });
-  }
-  // Manejar el envío del formulario
-   const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Valores de los inputs:', formData);
   }
 
   return (
@@ -38,10 +47,71 @@ export const Column = ({ column, tasks, onDragStart, onDrop }) => {
       }}
     >
       <h3 style={{ textAlign: 'center' }}>{column.title}</h3>
-      <form onSubmit={handleSubmit}>
-        <TextField.Root name={column.id} value={formData[column.id]} onInput={handleChange} mb='4' variant="surface" placeholder="Introduce una tarea…" />
-        <Button variant='classic'>Crear</Button>
-      </form>
+        <TextField.Root name='titulo' value={newTask.titulo} onInput={handleChange} mb='4' variant="surface" placeholder="Introduce una tarea…" />
+        <AlertDialog.Root>
+          <AlertDialog.Trigger>
+            <Button variant='classic'>Crear</Button>
+          </AlertDialog.Trigger>
+          <AlertDialog.Content maxWidth="450px">
+            <AlertDialog.Title>Crear tarea</AlertDialog.Title>
+            <AlertDialog.Description size="2">
+                <form>
+                  <Flex direction='column' gap='2'>
+                    <Box>
+                      <label>Título</label>
+                      <TextField.Root size="1" name='titulo' value={newTask.titulo} onChange={handleChange} placeholder="Introduce un título..." />
+                    </Box>
+                    <Box>
+                      <label>Descripción</label>
+                      <TextArea name='descripcion' value={newTask.descripcion} onChange={handleChange} placeholder="Introduce una descripción..." />
+                    </Box>
+                    <Box>
+                      <label style={{display: 'block'}}>Status</label>
+                      <Select.Root defaultValue={defaultValuesStatus[column.title]} onChange={handleChange} name='status'>
+                        <Select.Trigger />
+                        <Select.Content>
+                          <Select.Item value="pending">Pendiente</Select.Item>
+                          <Select.Item value="in progress">En Progreso</Select.Item>
+                          <Select.Item value="completed">
+                              Completado
+                          </Select.Item>
+                        </Select.Content>
+                      </Select.Root>
+                    </Box>
+                    <Box>
+                      <label style={{display: 'block'}}>Prioridad</label>
+                      <Select.Root defaultValue={newTask.prioridad} onChange={handleChange} name='prioridad'>
+                        <Select.Trigger />
+                        <Select.Content>
+                          <Select.Item value="low">Baja</Select.Item>
+                          <Select.Item value="medium">Media</Select.Item>
+                          <Select.Item value="high">
+                              Alta
+                          </Select.Item>
+                        </Select.Content>
+                      </Select.Root>
+                    </Box>
+                    <Box>
+                      <label style={{display: 'block'}}>Fecha fin</label>
+                      <input type='date' value={newTask.fecha_fin} onChange={handleChange} name='fecha_fin'/>
+                    </Box>
+                  </Flex>
+                </form>
+            </AlertDialog.Description>
+            <Flex gap="3" mt="4" justify="end">
+              <AlertDialog.Cancel>
+                <Button variant="soft" color="gray">
+                  Cancelar
+                </Button>
+              </AlertDialog.Cancel>
+              <AlertDialog.Action>
+                <Button variant="classic">
+                  Crear
+                </Button>
+              </AlertDialog.Action>
+            </Flex>
+          </AlertDialog.Content>
+        </AlertDialog.Root>
       {tasks.map((task) => (
         <Task key={task.id} task={task} onDragStart={onDragStart} />
       ))}

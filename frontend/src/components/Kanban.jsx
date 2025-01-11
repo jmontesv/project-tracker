@@ -55,7 +55,6 @@ export const Kanban = ({ data, setData, draggedTaskId, setDraggedTaskId }) => {
             tasks={tasks}
             onDragStart={handleDragStart}
             onDrop={handleDrop}
-            se
           />
         );
       })}
