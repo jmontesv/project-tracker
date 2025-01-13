@@ -41,7 +41,6 @@ export const Kanban = ({ data, setData, draggedTaskId, setDraggedTaskId }) => {
 
     setDraggedTaskId(null);
   };
-  
   return (
     <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', marginTop: '16px' }}>
       {data.columnOrder.map((columnId) => {

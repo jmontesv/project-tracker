@@ -27,6 +27,7 @@ export const formatTasksToKanban = (tasks) => {
     kanban.tasks[task.id] = {
       id: task.id.toString(),
       title: task.title,
+      status: task.status,
       description: task.description,
       priority: task.priority,
       due_date: task.due_date,

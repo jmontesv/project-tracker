@@ -88,4 +88,6 @@ def tareas():
         
         db.session.add(nueva_tarea)
         db.session.commit()
-    return jsonify({"message": f"La tarea {data['titulo']} agregada con éxito!"}), 201 
+
+        # Obtener el ID de la tarea recién creada
+    return jsonify({"message": f"La tarea {data['titulo']} agregada con éxito!", "task": nueva_tarea.to_dict()}), 201 

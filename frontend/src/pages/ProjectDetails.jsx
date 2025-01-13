@@ -1,29 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
-import { getProjectTasks, getProject } from '../services/projectService';
+import { getProject } from '../services/projectService';
 import { Kanban } from '../components/Kanban';
 import { formatTasksToKanban } from '../helpers/Kanban'
+import { TaskContext } from '../contexts/TaskContext'
 
 export const ProjectDetails = () => {
   const { id } = useParams(); // Obtener el ID del proyecto de la URL
-  const [tasks, setTasks] = useState([]); 
   const [project, setProject] = useState({})
   const [data, setData] = useState({});
+  const { tasks, loadTasks, loadingTasks, errorTasks } = useContext(TaskContext)
   const [draggedTaskId, setDraggedTaskId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const data = await getProjectTasks(id);
-        setTasks(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
     const fetchProjectDetails = async () => {
       try {
         const data = await getProject(id);
@@ -34,9 +25,8 @@ export const ProjectDetails = () => {
         setLoading(false);
       }
     };
-
+    loadTasks(id)
     fetchProjectDetails()
-    fetchTasks();
   }, [id]);
   
   useEffect(() => {
@@ -48,8 +38,8 @@ export const ProjectDetails = () => {
 
 
 
-  if (loading) return <p>Cargando tareas...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (loadingTasks) return <p>Cargando tareas...</p>;
+  if (errorTasks) return <p>Error: {error}</p>;
   if (Object.keys(data).length > 0)
     return (
       <>
