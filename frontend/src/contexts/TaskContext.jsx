@@ -1,6 +1,6 @@
 import { createContext, useState } from 'react';
 import { getProjectTasks } from '../services/projectService'; // Importa tus servicios de tareas
-import { createNewTask } from '../services/taskService'; // Importa tus servicios de tareas
+import { createNewTask, removeTask } from '../services/taskService'; // Importa tus servicios de tareas
 
 // Crear el contexto
 export const TaskContext = createContext();
@@ -13,6 +13,7 @@ export const TaskProvider = ({ children }) => {
 
   // Cargar tareas desde la API
   const loadTasks = async (projectId) => {
+    setError(null) // Limpia el error en caso de que hubiese en la renderización anterior
     setLoading(true);
     try {
       const fetchedTasks = await getProjectTasks(projectId);
@@ -43,9 +44,10 @@ export const TaskProvider = ({ children }) => {
   // Eliminar una tarea (opcional)
   const deleteTask = async (taskId) => {
     setLoading(true);
+    console.log(taskId)
     try {
-      // Implementa la lógica de eliminar tarea en la API si es necesario
-      setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
+      removeTask(taskId)
+      setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId))
     } catch (err) {
       console.error('Error al eliminar la tarea:', err);
       setError(err.message);

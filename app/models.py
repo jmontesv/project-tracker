@@ -41,6 +41,12 @@ class Task(db.Model):
     created_at = db.Column(db.DateTime)  # Fecha de creación
     updated_at = db.Column(db.DateTime)  # Fecha de actualización
 
+    comments = db.relationship(
+        'Comment',
+        backref='task',
+        cascade="all, delete"
+    )
+
     def to_dict(self):
         """Convierte la tarea en un diccionario para respuesta JSON"""
         return {
@@ -55,3 +61,11 @@ class Task(db.Model):
             "created_at": self.created_at.strftime('%Y-%m-%d %H:%M:%S') if self.created_at else None,
             "updated_at": self.updated_at.strftime('%Y-%m-%d %H:%M:%S') if self.updated_at else None,
         }
+    
+class Comment(db.Model):
+    __tablename__ = 'comments'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, nullable=True)
+    task_id = db.Column(db.Integer, db.ForeignKey('tasks.id'), nullable=False)
+    comment = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime)  # Fecha de creación

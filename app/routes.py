@@ -1,5 +1,5 @@
 # app/routes.py
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, abort
 from app.models import db, projects, Task
 
 # Crear un Blueprint llamado "main"
@@ -91,3 +91,24 @@ def tareas():
 
         # Obtener el ID de la tarea recién creada
     return jsonify({"message": f"La tarea {data['titulo']} agregada con éxito!", "task": nueva_tarea.to_dict()}), 201 
+
+@main.route('/tareas/<int:task_id>', methods=['DELETE'])
+def delete_task(task_id):
+    try:
+        # Busca la tarea por ID
+        task = Task.query.get(task_id)
+        
+        # Si no se encuentra, retorna un error 404
+        if not task:
+            abort(404, description=f"Tarea con ID {task_id} no encontrada.")
+        
+        # Elimina la tarea de la base de datos
+        db.session.delete(task)
+        db.session.commit()
+        
+        return jsonify({"message": f"Tarea con ID {task_id} eliminada exitosamente."}), 200
+    
+    except Exception as e:
+        # Manejo de errores genérico
+        db.session.rollback()
+        return jsonify({"error": "Ocurrió un error al intentar eliminar la tarea.", "details": str(e)}), 500

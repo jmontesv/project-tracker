@@ -6,13 +6,13 @@ import { formatTasksToKanban } from '../helpers/Kanban'
 import { TaskContext } from '../contexts/TaskContext'
 
 export const ProjectDetails = () => {
-  const { id } = useParams(); // Obtener el ID del proyecto de la URL
+  const { id } = useParams()
   const [project, setProject] = useState({})
   const [data, setData] = useState({});
-  const { tasks, loadTasks, loadingTasks, errorTasks } = useContext(TaskContext)
-  const [draggedTaskId, setDraggedTaskId] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { tasks, loadTasks, loading: loadingTasks, error: errorTasks } = useContext(TaskContext)
+  const [draggedTaskId, setDraggedTaskId] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     const fetchProjectDetails = async () => {
@@ -25,27 +25,31 @@ export const ProjectDetails = () => {
         setLoading(false);
       }
     };
-    loadTasks(id)
+    setData({}); // Limpia el estado de Kanban
     fetchProjectDetails()
+    loadTasks(id)
   }, [id]);
-  
+
   useEffect(() => {
     if (tasks.length > 0) {
+      console.log(tasks)
       const kanban = formatTasksToKanban(tasks)
       setData(kanban)
     }
   }, [tasks])
 
+  if (loading) return <p>Cargando proyecto....</p>
 
-
-  if (loadingTasks) return <p>Cargando tareas...</p>;
-  if (errorTasks) return <p>Error: {error}</p>;
-  if (Object.keys(data).length > 0)
-    return (
-      <>
-        <h1>{project.name}</h1>
-        <p>{project.description}</p>
-        <Kanban data={data} setData={setData} draggedTaskId={draggedTaskId} setDraggedTaskId={setDraggedTaskId}/>
-      </>
-    )   
+  return <>
+    <h1>{project.name}</h1>
+    <p>{project.description}</p>
+    {
+      loadingTasks 
+        ? <p>Cargando tareas...</p>
+        : 
+          errorTasks 
+            ? <p>Error: {errorTasks}</p>
+            : tasks.length > 0 && Object.keys(data).length > 0 && <Kanban data={data} setData={setData} draggedTaskId={draggedTaskId} setDraggedTaskId={setDraggedTaskId}/>      
+    }
+  </>  
 }
