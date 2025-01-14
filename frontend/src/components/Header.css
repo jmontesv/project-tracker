@@ -1,0 +1,24 @@
+.link {
+  color: var(--indigo-10);
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+header {
+  margin: 0;
+  padding: 0 12px;
+  background-color: var(--indigo-6);
+}
+
+.titulo {
+  font-size: small;
+  color: var(--indigo-10);
+  text-decoration: none;
+}
+
+.titulo:active {
+  color: var(--indigo-10); 
+}

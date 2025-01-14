@@ -60,7 +60,7 @@ const Projects = () => {
             <Flex gap="3" mt="4" justify="end">
               <AlertDialog.Cancel>
                 <Button variant="soft" color="red">
-                  Cancel
+                  Cancelar
                 </Button>
               </AlertDialog.Cancel>
             </Flex>
