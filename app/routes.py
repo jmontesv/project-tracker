@@ -35,7 +35,23 @@ def proyectos():
         projects_list = [project.to_dict() for project in proyectos]
         
         return jsonify(projects_list), 200
-    
+
+@main.route('/proyectos/<int:owner_id>', methods=['GET'])
+def get_projects_by_owner(owner_id):
+    try:
+        # Obtener proyectos por el ID del propietario
+        proyectos = projects.query.filter_by(created_by=owner_id).all()
+        
+        # Verificar si hay proyectos
+        if not proyectos:
+            return jsonify({"message": "No se encontraron proyectos para este ID."}), 404
+
+        # Convertir a JSON y responder
+        return jsonify([proyecto.to_dict() for proyecto in proyectos]), 200
+
+    except Exception as e:
+        return jsonify({"error": "Ocurrió un error al obtener los proyectos.", "details": str(e)}), 500
+
 @main.route('/proyectos/<int:project_id>', methods=['GET'])
 def proyecto(project_id):
     try:

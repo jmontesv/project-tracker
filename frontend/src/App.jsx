@@ -6,12 +6,11 @@ import { Header } from './components/Header';
 
 
 function App() {
- 
   return (
     <>
       <BrowserRouter>
         <Header />
-        <Flex direction='column' justify='center' align='center'>
+        <Flex direction='column' justify='center' align='center' minHeight='80vh'>
           <AppRoutes />
         </Flex>
       </BrowserRouter>

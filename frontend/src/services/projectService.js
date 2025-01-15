@@ -10,6 +10,16 @@ export const getProjects = async () => {
   }
 }
 
+// Obtener todos los proyectos de un determinado usuario
+export const getProjectsOfUser = async (userId) => {
+  try {
+    const response = await api.get(`/proyectos/${userId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error('Error al obtener los proyectos', error);
+  }
+}
+
 // Crear un nuevo proyecto
 export const createProject = async (projectData) => {
   try {

@@ -1,21 +1,24 @@
-import { useEffect, useState } from 'react';
-import { getProjects, createProject } from '../services/projectService';
+import { useEffect, useState,useContext } from 'react';
+import { getProjectsOfUser, createProject } from '../services/projectService';
 import { ProjectForm } from '../components/ProjectForm'
 import { Flex, Card, Text, AlertDialog, Button } from '@radix-ui/themes'
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../contexts/AuthContext';
 
 const Projects = () => {
   const [projects, setProjects] = useState([]);
   const [error, setError] = useState(null);
+  const { user } = useContext(AuthContext)
   const navigate = useNavigate()
 
   useEffect(() => {
     const fetchProjects = async () => {
+      console.log(user)
       try {
-        const data = await getProjects();
+        const data = await getProjectsOfUser(user.id);
         setProjects(data);
       } catch (error) {
-        setError('No se pudieron cargar los proyectos');
+        setError('No se pudieron cargar los proyectos', error);
       }
     };
 

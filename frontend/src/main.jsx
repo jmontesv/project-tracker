@@ -5,13 +5,16 @@ import "@radix-ui/themes/styles.css";
 import './index.css'
 import { Theme } from "@radix-ui/themes";
 import App from './App.jsx'
+import { AuthProvider } from './contexts/AuthContext.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Theme>
-      <TaskProvider>
-        <App />
-      </TaskProvider>
+      <AuthProvider>
+        <TaskProvider>
+          <App />
+        </TaskProvider>
+      </AuthProvider>
     </Theme>
   </StrictMode>,
 )
