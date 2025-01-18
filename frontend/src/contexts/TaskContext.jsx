@@ -62,9 +62,10 @@ export const TaskProvider = ({ children }) => {
         tasks,
         loading,
         error,
+        setError,
         loadTasks,
         createTask,
-        deleteTask,
+        deleteTask
       }}
     >
       {children}

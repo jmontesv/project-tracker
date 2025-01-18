@@ -83,3 +83,20 @@ class User(db.Model):
     )  # Estado de la tarea
     created_at = db.Column(db.DateTime)  # Fecha de creación
     updated_at = db.Column(db.DateTime)  # Fecha de actualización
+
+class ProjectMembers(db.Model):
+    __tablename__ = 'project_members'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    role = db.Column(db.String(50), nullable=False)
+
+    def to_dict(self):
+        """Serialize the model to a dictionary"""
+        return {
+            'id': self.id,
+            'project_id': self.project_id,
+            'user_id': self.user_id,
+            'role': self.role
+        }

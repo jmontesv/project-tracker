@@ -1,13 +1,16 @@
 import { Button, TextArea, TextField, Flex } from '@radix-ui/themes';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { AuthContext } from '../contexts/AuthContext';
 
 export const ProjectForm = ({ onSubmit }) => {
+
+  const { user } = useContext(AuthContext)
   const [formData, setFormData] = useState({
     nombre: '',
     descripcion: '',
-    fecha_inicio: '',
+    fecha_inicio: new Date().toISOString(),
     fecha_actualizacion: new Date().toISOString(),
-    usuario_id: 1,
+    usuario_id: user.id,
   });
 
   const handleChange = (e) => {
@@ -24,8 +27,8 @@ export const ProjectForm = ({ onSubmit }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{textAlign: 'center'}}> 
-      <Flex direction='column' align='center' gap='2'>
+    <form onSubmit={handleSubmit}> 
+      <Flex direction='column' gap='2'>
         <div>
           <label>Nombre:</label>
           <TextField.Root
@@ -56,8 +59,8 @@ export const ProjectForm = ({ onSubmit }) => {
             required
           />
         </div>
+        <Button mt='2' type="submit">Crear Proyecto</Button>
       </Flex> 
-      <Button mt='2' type="submit">Crear Proyecto</Button>
     </form>
   );
 };

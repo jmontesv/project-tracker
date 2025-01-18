@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from werkzeug.security import check_password_hash, generate_password_hash
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from datetime import timedelta
 from app.models import User  # Modelo del usuario en tu base de datos
 from app.models import db
@@ -69,3 +69,28 @@ def register():
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": "Ocurrió un error al registrar el usuario", "details": str(e)}), 500
+    
+
+@auth.route('/user', methods=['GET'])
+@jwt_required()  # Requiere un token válido
+def get_user_details():
+    try:
+        # Obtén el ID del usuario desde el token
+        user_id = get_jwt_identity()
+
+        # Busca al usuario en la base de datos
+        user = User.query.get(user_id)
+
+        if not user:
+            return jsonify({"error": "Usuario no encontrado"}), 404
+
+        # Devuelve los detalles del usuario
+        return jsonify({
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "created_at": user.created_at
+        }), 200
+
+    except Exception as e:
+        return jsonify({"error": "Ocurrió un error al obtener los datos del usuario", "details": str(e)}), 500

@@ -1,4 +1,5 @@
 import api from './api';
+import { PROJECT_WITHOUT_TASKS, NO_AUTHORIZED } from '../constants'
 
 // Obtener todos los proyectos
 export const getProjects = async () => {
@@ -48,6 +49,12 @@ export const getProjectTasks = async (projectId) => {
     return response.data; // Asume que las tareas vienen en `response.data`
   } catch (error) {
     console.error(`Error al obtener las tareas del proyecto con ID ${projectId}:`, error.message);
+    if (error.status == 403) {
+      throw new Error(NO_AUTHORIZED);
+    }
+    if (error.status == 404) {
+      throw new Error(PROJECT_WITHOUT_TASKS);  
+    }
     throw new Error('No se pudieron obtener las tareas del proyecto');
   }
 };

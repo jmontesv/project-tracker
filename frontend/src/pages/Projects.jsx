@@ -13,17 +13,18 @@ const Projects = () => {
 
   useEffect(() => {
     const fetchProjects = async () => {
-      console.log(user)
-      try {
-        const data = await getProjectsOfUser(user.id);
-        setProjects(data);
-      } catch (error) {
-        setError('No se pudieron cargar los proyectos', error);
+      if (Object.keys(user).length > 0) {
+        try {
+          const data = await getProjectsOfUser(user.id);
+          setProjects(data);
+        } catch (error) {
+          setError('No se pudieron cargar los proyectos', error);
+        }
       }
     };
 
     fetchProjects();
-  }, []);
+  }, [user]);
 
   const handleFormSubmit = async (formData) => {
     try {
@@ -50,7 +51,7 @@ const Projects = () => {
 
   return (
     <div>
-      <h1>Proyectos</h1>
+      <h2>Proyectos</h2>
       {error && <p>{error}</p>}
       <Flex align='left' mb='2'>
         <AlertDialog.Root>

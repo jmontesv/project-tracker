@@ -1,6 +1,7 @@
 # app/routes.py
 from flask import Blueprint, request, jsonify, abort
-from app.models import db, projects, Task
+from app.models import db, projects, Task, ProjectMembers
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 # Crear un Blueprint llamado "main"
 main = Blueprint('main', __name__)
@@ -27,6 +28,16 @@ def proyectos():
         
             db.session.add(nuevo_proyecto)
             db.session.commit()
+
+            nuevo_miembro = ProjectMembers(
+                project_id=nuevo_proyecto.id,
+                user_id=data['usuario_id'],
+                role='admin'
+            )
+
+            db.session.add(nuevo_miembro)
+            db.session.commit()
+
             return jsonify({"message": f"Proyecto {data['nombre']} agregado con éxito!"}), 201  
     elif request.method == 'GET':
         proyectos = projects.query.all()
@@ -68,14 +79,23 @@ def proyecto(project_id):
         return jsonify({"error": f"An error occurred: {str(e)}"}), 500
 
 @main.route('/tareas/proyecto/<int:project_id>', methods=['GET'])
+@jwt_required()
 def tareasDeUnProyecto(project_id):
     try:
+        # Obtener el ID del usuario autenticado
+        user_id = get_jwt_identity()
+
+        # Verificar si el usuario pertenece al proyecto
+        membership = ProjectMembers.query.filter_by(project_id=project_id, user_id=user_id).first()
+        if not membership:
+            return jsonify({"error": "No tienes acceso a este proyecto"}), 403
+        
         # Consultar todas las tareas asociadas al proyecto
         tareas = Task.query.filter_by(project_id=project_id).all()
         
         # Validar si hay tareas asociadas
         if not tareas:
-            return jsonify({"message": f"No tasks found for project with id {project_id}"}), 404
+            return jsonify({"message": f"No se han encontrado tareas del proyecto {project_id}"}), 404
         
         # Serializar las tareas a formato JSON
         lista_tareas = [tarea.to_dict() for tarea in tareas]
