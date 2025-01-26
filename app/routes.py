@@ -1,6 +1,6 @@
 # app/routes.py
 from flask import Blueprint, request, jsonify, abort
-from app.models import db, projects, Task, ProjectMembers
+from app.models import db, projects, Task, ProjectMembers, User
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 # Crear un Blueprint llamado "main"
@@ -148,3 +148,34 @@ def delete_task(task_id):
         # Manejo de errores genérico
         db.session.rollback()
         return jsonify({"error": "Ocurrió un error al intentar eliminar la tarea.", "details": str(e)}), 500
+    
+@main.route('/proyectos/<int:project_id>/miembros', methods=['GET'])
+@jwt_required()
+def get_project_members(project_id):
+    """
+    Endpoint para obtener los miembros de un proyecto por su ID
+    """
+    try:
+        # Consulta los miembros del proyecto
+        members = db.session.query(ProjectMembers, User).join(
+            User, ProjectMembers.user_id == User.id
+        ).filter(ProjectMembers.project_id == project_id).all()
+
+        if not members:
+            return jsonify({"message": "No se encontraron miembros para este proyecto."}), 404
+
+        # Formatear los datos de los miembros para la respuesta
+        members_data = [
+            {
+                "id": member.User.id,
+                "name": member.User.username,
+                "email": member.User.email,
+                "role": member.ProjectMembers.role
+            }
+            for member in members
+        ]
+
+        return jsonify({"members": members_data}), 200
+
+    except Exception as e:
+        return jsonify({"error": "Ocurrió un error al obtener los miembros.", "details": str(e)}), 500

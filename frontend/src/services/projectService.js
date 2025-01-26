@@ -58,3 +58,13 @@ export const getProjectTasks = async (projectId) => {
     throw new Error('No se pudieron obtener las tareas del proyecto');
   }
 };
+
+export const getProjectMembers = async (projectId) => {
+  try {
+    const response = await api.get(`/proyectos/${projectId}/miembros`);
+    return response.data.members; // Devuelve la lista de miembros
+  } catch (error) {
+    console.error('Error al obtener los miembros del proyecto:', error);
+    throw new Error(error.response?.data?.message || 'Error al obtener los miembros del proyecto');
+  }
+};

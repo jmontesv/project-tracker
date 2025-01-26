@@ -28,6 +28,8 @@ export const AuthProvider = ({ children }) => {
         }
       }
       fetchUser()
+    }else {
+      setIsAuthenticated(false) 
     }
   }, [])
   

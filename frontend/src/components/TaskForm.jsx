@@ -1,7 +1,8 @@
-import { useState, useContext } from "react";
-import { TextField, TextArea, Select, Button, Flex, Box, AlertDialog } from "@radix-ui/themes"; 
+import { useState, useContext, useEffect } from "react";
+import { TextField, TextArea, Select, Button, Flex, Box, AlertDialog, Spinner } from "@radix-ui/themes"; 
 import { useParams } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
+import { getProjectMembers } from "../services/projectService";
 
 export const TaskForm = ({
   onSubmit,
@@ -11,6 +12,9 @@ export const TaskForm = ({
 }) => {
   const { id: idProject } = useParams()
   const { user } = useContext(AuthContext)
+  const [members, setMembers] = useState([])
+  const [errorMembers, setErrorMembers] = useState(null)
+  const [loadingMembers, setLoadingMembers] = useState(false)
   const [task, setTask] = useState({
     titulo: "",
     descripcion: "",
@@ -24,7 +28,22 @@ export const TaskForm = ({
     ...defaultTask, // Sobrescribe los valores predeterminados con los del defaultTask
   });
 
+  useEffect(() => {
+    const fetchMembers = async () => {
+      try {
+        const fetchedMembers = await getProjectMembers(idProject);
+        setMembers(fetchedMembers);
+      } catch (err) {
+        setErrorMembers(err.message);
+      } finally {
+        setLoadingMembers(false);
+      }
+    };
 
+    fetchMembers();
+  }, [idProject]);
+
+  console.log(members)
   const handleChange = (e) => {
     const { name, value } = e.target;
     setTask({
@@ -89,9 +108,7 @@ export const TaskForm = ({
                 <label style={{ display: "block" }}>Status</label>
                 <Select.Root
                   defaultValue={task.status}
-                  onValueChange={(value) =>
-                    handleSelectChange("status", value)
-                  }
+                  onValueChange={(value) => handleSelectChange("status", value)}
                 >
                   <Select.Trigger />
                   <Select.Content>
@@ -105,15 +122,33 @@ export const TaskForm = ({
                 <label style={{ display: "block" }}>Prioridad</label>
                 <Select.Root
                   defaultValue={task.prioridad}
-                  onValueChange={(value) =>
-                    handleSelectChange("prioridad", value)
-                  }
+                  onValueChange={(value) => handleSelectChange("prioridad", value)}
                 >
                   <Select.Trigger />
                   <Select.Content>
                     <Select.Item value="low">Baja</Select.Item>
                     <Select.Item value="medium">Media</Select.Item>
                     <Select.Item value="high">Alta</Select.Item>
+                  </Select.Content>
+                </Select.Root>
+              </Box>
+              <Box>
+                <label style={{ display: "block" }}>Asignado a</label>
+                <Select.Root
+                  defaultValue={task.asignado_a}
+                  onValueChange={(value) => handleSelectChange("asignado_a", value)}
+                >
+                  <Select.Trigger />
+                  <Select.Content>
+                    {loadingMembers && <Spinner />}
+                    {errorMembers && <p>{errorMembers}</p>}
+                    {members.map((member) => {
+                      return (
+                        <Select.Item key={member.id} value={String(member.id)}>
+                          {member.name}
+                        </Select.Item>
+                      );
+                    })}
                   </Select.Content>
                 </Select.Root>
               </Box>
