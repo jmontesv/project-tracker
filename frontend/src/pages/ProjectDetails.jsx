@@ -7,6 +7,7 @@ import { TaskContext } from '../contexts/TaskContext'
 import { Navigate } from 'react-router-dom';
 import { PROJECT_WITHOUT_TASKS, NO_AUTHORIZED } from '../constants'
 import { TaskForm } from '../components/TaskForm';
+import { Spinner, Flex } from '@radix-ui/themes';
 
 export const ProjectDetails = () => {
   const { id } = useParams()
@@ -46,33 +47,34 @@ export const ProjectDetails = () => {
     setErrorTasks(null)
   }
 
-  if (loading) return <p>Cargando proyecto....</p>
+  if (loading) return <Spinner />
 
   return (
     <>
-      <h1>{project.name}</h1>
-      <p>{project.description}</p>
-      {loadingTasks ? (
-        <p>Cargando tareas...</p>
-      ) : errorTasks ? (
-        <>
-          {errorTasks == NO_AUTHORIZED ? (
-            <Navigate to="/login" replace />
-          ) : (
-            errorTasks == PROJECT_WITHOUT_TASKS && <TaskForm onSubmit={handleSubmit}/>
-          )}
-        </>
-      ) : (
-        tasks.length > 0 &&
-        Object.keys(data).length > 0 && (
+      <h2>{project.name}</h2>
+      <Flex direction='column' align='center'>
+        <p>{project.description}</p>
+        {loadingTasks ? (
+          <Spinner />
+        ) : errorTasks ? (
+          <>
+            {errorTasks == NO_AUTHORIZED ? (
+              <Navigate to="/login" replace />
+            ) : (
+              errorTasks == PROJECT_WITHOUT_TASKS && <TaskForm onSubmit={handleSubmit} />
+            )}
+          </>
+        ) : tasks.length > 0 && Object.keys(data).length > 0 ? (
           <Kanban
             data={data}
             setData={setData}
             draggedTaskId={draggedTaskId}
             setDraggedTaskId={setDraggedTaskId}
           />
-        )
-      )}
+        ) : (
+          <TaskForm onSubmit={handleSubmit} />
+        )}
+      </Flex>
     </>
   );  
 }

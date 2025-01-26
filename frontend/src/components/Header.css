@@ -1,5 +1,5 @@
 .link {
-  color: var(--indigo-10);
+  color: var(--gray-5);
   text-decoration: none;
 }
 
@@ -10,12 +10,14 @@
 header {
   margin: 0;
   padding: 12px;
-  background-color: var(--indigo-6);
+  background-color: var(--gray-12);
+  box-shadow: var(--shadow-6);
 }
 
 .titulo {
   font-size: small;
-  color: var(--indigo-10);
+  color: var(--gray-10);
+  font-weight: bold;
   text-decoration: none;
 }
 

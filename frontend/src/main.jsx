@@ -9,7 +9,7 @@ import { AuthProvider } from './contexts/AuthContext.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <Theme>
+    <Theme accentColor='gray'>
       <AuthProvider>
         <TaskProvider>
           <App />

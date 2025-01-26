@@ -63,7 +63,7 @@ def get_projects_by_owner(owner_id):
     except Exception as e:
         return jsonify({"error": "Ocurrió un error al obtener los proyectos.", "details": str(e)}), 500
 
-@main.route('/proyectos/<int:project_id>', methods=['GET'])
+@main.route('/proyectos/detalles/<int:project_id>', methods=['GET'])
 def proyecto(project_id):
     try:
         # Buscar el proyecto por ID

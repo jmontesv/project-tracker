@@ -34,7 +34,7 @@ export const createProject = async (projectData) => {
 // Obtener un proyecto específico
 export const getProject = async (projectId) => {
   try {
-    const response = await api.get(`/proyectos/${projectId}`);
+    const response = await api.get(`/proyectos/detalles/${projectId}`);
     return response.data; // Asume que las tareas vienen en `response.data`
   } catch (error) {
     console.error(`Error al obtener el proyecto con ID ${projectId}:`, error.message);

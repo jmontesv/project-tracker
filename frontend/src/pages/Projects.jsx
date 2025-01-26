@@ -1,7 +1,7 @@
 import { useEffect, useState,useContext } from 'react';
 import { getProjectsOfUser, createProject } from '../services/projectService';
 import { ProjectForm } from '../components/ProjectForm'
-import { Flex, Card, Text, AlertDialog, Button } from '@radix-ui/themes'
+import { Flex, Card, Text, AlertDialog, Button, Heading } from '@radix-ui/themes'
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 
@@ -50,28 +50,30 @@ const Projects = () => {
   }
 
   return (
-    <div>
-      <h2>Proyectos</h2>
+    <Flex direction='column' width='100%' gap='4'>
+      <Heading mt='4' as='h2'>Proyectos</Heading>
       {error && <p>{error}</p>}
-      <Flex align='left' mb='2'>
-        <AlertDialog.Root>
-          <AlertDialog.Trigger  >
-            <Button color="green">Añadir proyecto</Button>
-          </AlertDialog.Trigger>
-          <AlertDialog.Content maxWidth="450px">
-            <AlertDialog.Title>Añadir proyecto</AlertDialog.Title>
-            <ProjectForm onSubmit={handleFormSubmit} />
-            <Flex gap="3" mt="4" justify="end">
-              <AlertDialog.Cancel>
-                <Button variant="soft" color="red">
-                  Cancelar
-                </Button>
-              </AlertDialog.Cancel>
-            </Flex>
-          </AlertDialog.Content>
-        </AlertDialog.Root>
-      </Flex>
-      <Flex direction="column" gap="3" maxWidth="auto" style={{cursor: 'pointer'}}>
+      <Flex direction="column" gap="3" style={{cursor: 'pointer', margin: '0 auto'}} width='50%' display='block'>
+        <Flex align='left' mb='2'>
+          <AlertDialog.Root>
+            <AlertDialog.Trigger  >
+            <Button style={{cursor: 'pointer'}} color="gray" variant="classic" highContrast>
+              Añadir proyecto
+            </Button>
+            </AlertDialog.Trigger>
+            <AlertDialog.Content maxWidth="450px">
+              <AlertDialog.Title>Añadir proyecto</AlertDialog.Title>
+              <ProjectForm onSubmit={handleFormSubmit} />
+              <Flex gap="3" mt="4" justify="end">
+                <AlertDialog.Cancel>
+                  <Button variant="soft" color="red">
+                    Cancelar
+                  </Button>
+                </AlertDialog.Cancel>
+              </Flex>
+            </AlertDialog.Content>
+          </AlertDialog.Root>
+        </Flex>
         {projects.map((project) => (
           <Card onClick={() => handleClickOnProject(project.id)} key={project.id} variant="classic">
             <Text as="div" size="2" weight="bold">
@@ -83,7 +85,7 @@ const Projects = () => {
 	        </Card>
         ))}
       </Flex>
-    </div>
+    </Flex>
   );
 };
 

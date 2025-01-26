@@ -19,6 +19,7 @@ export const Task = ({ task, onDragStart }) => {
         padding: '8px',
         margin: '8px 0',
         cursor: 'grab',
+        minWidth: "200px"
       }}
     >
       <Text as="div" size="2" weight="bold">

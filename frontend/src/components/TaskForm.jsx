@@ -50,8 +50,8 @@ export const TaskForm = ({
       status: defaultStatus,
       prioridad: defaultPriority,
       fecha_fin: "",
-      asignado_a: 1,
-      id_proyecto: defaultTask.id_proyecto || 0,
+      asignado_a: user.id,
+      id_proyecto: idProject,
       se_creo: new Date().toISOString(),
       se_actualizo: new Date().toISOString(),
     });

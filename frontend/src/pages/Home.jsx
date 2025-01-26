@@ -1,7 +1,9 @@
+import { Heading } from "@radix-ui/themes";
+
 export const Home = () => {
   return (
     <div>
-      <h1>Inicio</h1>
+      <Heading mt='4' as="h1">Inicio</Heading>
       <p>Bienvenido a la página principal de ProjectTracker.</p>
     </div>
   );

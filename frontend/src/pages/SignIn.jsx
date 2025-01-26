@@ -21,20 +21,23 @@ export const SignIn = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    login(credentials) 
+    const userData = await login(credentials) 
+    console.log('Usuario ha iniciado sesión', userData)
     navigate('/proyectos')
   }
   
   return (
-    <form onSubmit={handleSubmit}>
-      <Flex direction='column' gap='4' minWidth='600px' style={{border: '1px solid var(--indigo-7)', borderRadius: '8px'}} p='8'>
-      <Heading as="h2">Inicio sesión</Heading>
-      <label>Email</label>
-      <TextField.Root size="3" name="email" onChange={handleChange} placeholder="Introduce el email..." />
-      <label>Contraseña</label>
-      <TextField.Root size="3" name="password" onChange={handleChange} type="password" placeholder="Introduce la contraseña..." />
-      <Button type='submit' variant="classic">Iniciar sesión</Button>
-    </Flex>
-    </form>
+    <>
+      <Heading as="h2" mt='4'>Inicio sesión</Heading>
+      <form onSubmit={handleSubmit} style={{display: 'flex', width: '100%', height:'100%', alignItems: 'center', justifyContent: 'center'}}>
+        <Flex direction='column' gap='4' minWidth='600px' style={{borderRadius: '8px'}} p='8'>
+          <label>Email</label>
+          <TextField.Root size="3" name="email" onChange={handleChange} placeholder="Introduce el email..." />
+          <label>Contraseña</label>
+          <TextField.Root autoComplete="on" size="3" name="password" onChange={handleChange} type="password" placeholder="Introduce la contraseña..." />
+          <Button type='submit' variant="classic">Iniciar sesión</Button>
+        </Flex>
+      </form>
+    </>
   );
 };
